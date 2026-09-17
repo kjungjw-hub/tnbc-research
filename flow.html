@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TNBC Research Pipeline</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --panel: #ffffff;
+    --border: #e2e0da;
+    --text: #1e1c18;
+    --text-dim: #6b6862;
+    --accent: #a6423a;
+    --accent-soft: #f3ded9;
+    --done: #3c7a5e;
+    --done-soft: #dfeee6;
+    --planned: #8a7a4d;
+    --planned-soft: #f1e9d2;
+    --code-bg: #efece5;
+    --shadow: 0 1px 2px rgba(30,28,24,0.06), 0 4px 14px rgba(30,28,24,0.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #171614;
+      --panel: #211f1c;
+      --border: #34322c;
+      --text: #ece9e2;
+      --text-dim: #a19c92;
+      --accent: #e08279;
+      --accent-soft: #3a2523;
+      --done: #7fd1a8;
+      --done-soft: #1d3327;
+      --planned: #e0c877;
+      --planned-soft: #33301c;
+      --code-bg: #2a2824;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 14px rgba(0,0,0,0.25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #171614;
+    --panel: #211f1c;
+    --border: #34322c;
+    --text: #ece9e2;
+    --text-dim: #a19c92;
+    --accent: #e08279;
+    --accent-soft: #3a2523;
+    --done: #7fd1a8;
+    --done-soft: #1d3327;
+    --planned: #e0c877;
+    --planned-soft: #33301c;
+    --code-bg: #2a2824;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 14px rgba(0,0,0,0.25);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  header {
+    padding: 32px 16px 12px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 1.6rem;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    max-width: 62ch;
+  }
+  .updated {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    margin-top: 10px;
+  }
+  .legend {
+    display: flex;
+    gap: 18px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .dot.done { background: var(--done); }
+  .dot.planned { background: var(--planned); }
+
+  main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 8px 16px 60px;
+  }
+
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .stage {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 16px;
+  }
+
+  .rail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .node {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--done);
+    background: var(--done-soft);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .node.planned { border-color: var(--planned); background: var(--planned-soft); }
+  .connector {
+    width: 2px;
+    flex: 1;
+    background: var(--border);
+    margin: 2px 0;
+    min-height: 24px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+    box-shadow: var(--shadow);
+  }
+  .card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .card h2 {
+    font-size: 1.05rem;
+    margin: 0;
+  }
+  .badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .badge.done { color: var(--done); background: var(--done-soft); }
+  .badge.planned { color: var(--planned); background: var(--planned-soft); }
+
+  .card p.desc {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    margin: 8px 0 12px;
+  }
+
+  .branches {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 10px 0;
+  }
+  .branch {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    background: var(--code-bg);
+  }
+  .branch b { display: block; font-size: 0.85rem; margin-bottom: 2px; }
+
+  .metrics {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .metric {
+    font-size: 0.8rem;
+  }
+  .metric .val {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .metric .lbl { color: var(--text-dim); }
+
+  .files {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  code.file {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.78rem;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 8px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  a code.file:hover { border-color: var(--accent); }
+
+  .note {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    border-left: 3px solid var(--accent-soft);
+    padding-left: 10px;
+    margin-top: 12px;
+  }
+
+  footer {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 16px 40px;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+  }
+  footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <h1>TNBC Research Pipeline</h1>
+  <div class="subtitle">
+    Rebuilding triple-negative breast cancer subtyping on public multi-omics
+    data — from raw cohorts through explainable fusion models to a deployed,
+    presentable result. This page mirrors the current state of the
+    <a href="https://github.com/kjungjw-hub/tnbc-research">tnbc-research</a>
+    repo and is updated alongside it.
+  </div>
+  <div class="legend">
+    <span><span class="dot done"></span> Done</span>
+    <span><span class="dot planned"></span> Planned</span>
+  </div>
+  <div class="updated">Last updated: 2026-09-16 &middot; reflects commit 00f844c</div>
+</header>
+
+<main>
+  <div class="pipeline">
+
+    <div class="stage">
+      <div class="rail"><div class="node"></div><div class="connector"></div></div>
+      <div class="card">
+        <div class="card-head">
+          <h2>A &middot; Public data acquisition</h2>
+          <span class="badge done">Done</span>
+        </div>
+        <p class="desc">
+          Pull TNBC cohorts (ER-/PR-/HER2- by IHC) from the public cBioPortal
+          REST API — no auth, no institutional data dependency.
+        </p>
+        <div class="branches">
+          <div class="branch"><b>METABRIC</b>320 TNBC samples · clinical + PAM50/claudin-low call</div>
+          <div class="branch"><b>TCGA (pub2015)</b>42 TNBC samples · unlabeled, held for biology check</div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><div class="val">75</div><div class="lbl">curated genes (PAM50 + basal + ferroptosis + immune)</div></div>
+        </div>
+        <div class="files">
+          <a href="src/fetch_data.py"><code class="file">src/fetch_data.py</code></a>
+          <a href="src/gene_panel.py"><code class="file">src/gene_panel.py</code></a>
+          <a href="data/metabric_tnbc.csv"><code class="file">data/metabric_tnbc.csv</code></a>
+          <a href="data/tcga_tnbc.csv"><code class="file">data/tcga_tnbc.csv</code></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="rail"><div class="node"></div><div class="connector"></div></div>
+      <div class="card">
+        <div class="card-head">
+          <h2>B &middot; Multi-omics fusion models</h2>
+          <span class="badge done">Done</span>
+        </div>
+        <p class="desc">
+          Predict basal-like vs. non-basal TNBC (a real clinical split — non-basal
+          skews toward the better-prognosis LAR/MSL end of Lehmann's subtypes) by
+          fusing clinical, expression, and copy-number branches. Two architectures,
+          compared honestly rather than picking whichever looks best.
+        </p>
+        <div class="branches">
+          <div class="branch"><b>Clinical</b>grade, size, stage, mutation count</div>
+          <div class="branch"><b>Expression</b>75-gene mRNA z-scores</div>
+          <div class="branch"><b>CNA</b>75-gene discrete copy number</div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><div class="val">0.920</div><div class="lbl">AUC &middot; tree-based fusion</div></div>
+          <div class="metric"><div class="val">0.882</div><div class="lbl">AUC &middot; attention-fusion net</div></div>
+          <div class="metric"><div class="val">0.610</div><div class="lbl">AUC &middot; clinical-only baseline</div></div>
+        </div>
+        <div class="note">
+          Trees still win on raw AUC at this sample size (n=320) — expected for
+          small tabular data. The attention network trades a little accuracy for
+          a native per-modality signal: 40% expression / 32% CNA / 29% clinical.
+        </div>
+        <div class="files">
+          <a href="src/baseline_model.py"><code class="file">src/baseline_model.py</code></a>
+          <a href="src/attention_fusion.py"><code class="file">src/attention_fusion.py</code></a>
+          <a href="reports/baseline_results.md"><code class="file">reports/baseline_results.md</code></a>
+          <a href="reports/attention_fusion_results.md"><code class="file">reports/attention_fusion_results.md</code></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="rail"><div class="node"></div><div class="connector"></div></div>
+      <div class="card">
+        <div class="card-head">
+          <h2>C &middot; Explainability / clinical trust</h2>
+          <span class="badge done">Done</span>
+        </div>
+        <p class="desc">
+          SHAP on the fusion model surfaces which genes drive each prediction,
+          checked against known TNBC biology instead of trusted blindly.
+        </p>
+        <div class="branches">
+          <div class="branch"><b>Top drivers</b>MELK, CENPF, CCNB1, VIM (basal/proliferation)</div>
+          <div class="branch"><b>Immune signal</b>CXCL9, GZMB (IM-subtype adjacent)</div>
+          <div class="branch"><b>Ferroptosis</b>ACSL4 — echoes recent TNBC multi-omics literature</div>
+        </div>
+        <div class="files">
+          <a href="reports/shap_summary.png"><code class="file">reports/shap_summary.png</code></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="rail"><div class="node planned"></div><div class="connector"></div></div>
+      <div class="card">
+        <div class="card-head">
+          <h2>D &middot; Imaging branch (foundation model)</h2>
+          <span class="badge planned">Planned</span>
+        </div>
+        <p class="desc">
+          Extract frozen embeddings from an open pathology foundation model
+          (UNI or CONCH, HuggingFace) on H&amp;E tile crops from matched TCGA
+          slides, and fuse them in as a fourth branch of the attention network
+          alongside clinical / expression / CNA.
+        </p>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="rail"><div class="node planned"></div><div class="connector"></div></div>
+      <div class="card">
+        <div class="card-head">
+          <h2>E &middot; Interactive demo</h2>
+          <span class="badge planned">Planned</span>
+        </div>
+        <p class="desc">
+          Streamlit or Gradio app: pick a sample, see predicted subtype/risk
+          score plus its SHAP / attention explanation. Deployed free on
+          HuggingFace Spaces and linked from the resume / portfolio site.
+        </p>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="rail"><div class="node planned"></div></div>
+      <div class="card">
+        <div class="card-head">
+          <h2>F &middot; Publish / present</h2>
+          <span class="badge planned">Planned</span>
+        </div>
+        <p class="desc">
+          Short technical report or bioRxiv preprint, or a symposium/workshop
+          submission — the resume line is the byproduct of this, not the goal.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  Generated for the <a href="https://github.com/kjungjw-hub/tnbc-research">tnbc-research</a> project.
+  This file is kept in sync with the repo — every change to the pipeline, a
+  script, or a result updates this page in the same commit.
+</footer>
+</body>
+</html>

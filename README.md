@@ -6,6 +6,10 @@ multi-omics, explainable, deployable pipeline. Full rationale and phased plan:
 see the design doc this repo was scaffolded from (multi-omics fusion →
 foundation-model imaging → explainability → interactive demo → writeup).
 
+**[View the pipeline flow diagram](flow.html)** — visual status of every
+phase, kept in sync with this repo (open locally, or via GitHub Pages once
+enabled).
+
 ## Status: Phase A + B (baseline) complete
 
 **Data (Phase A)** — pulled from the public [cBioPortal](https://www.cbioportal.org)
