@@ -46,11 +46,35 @@ Run with:
 python3 src/baseline_model.py
 ```
 
+**Attention-fusion model (Phase B, stretch)** — `src/attention_fusion.py`
+replaces naive feature concatenation with a small PyTorch network: each
+modality (clinical / expression / CNA) is encoded separately, then combined
+via a learned attention gate (per DEDUCE/PACS-style multi-omics fusion
+architectures), instead of one tree ensemble over all features pooled
+together.
+
+| Model | Mean AUC |
+|---|---|
+| Tree-based fusion (`baseline_model.py`) | **0.920 +/- 0.004** |
+| Attention-fusion network (`attention_fusion.py`) | 0.882 +/- 0.025 |
+
+Honest result: the tree ensemble still edges out the neural network on raw
+AUC, which is expected for a dataset this size (n=320) — trees generally win
+on small tabular data. What the attention model adds instead is a *native*
+per-modality interpretability signal that a tree ensemble doesn't give you
+directly: learned attention weight of 0.399 on expression, 0.315 on CNA,
+0.286 on clinical (`reports/attention_fusion_results.md`) — i.e. the model
+itself reports how much it leaned on each data type, not just which genes.
+
+Run with:
+```
+python3 src/attention_fusion.py
+```
+
 ## Next
-- Swap the HistGradientBoosting fusion model for an attention-based fusion
-  network (per DEDUCE/PACS-style architectures) — same inputs, richer model.
 - Add the imaging branch: frozen UNI/CONCH pathology foundation-model
-  embeddings on matched TCGA H&E slides, fused with the omics branch.
+  embeddings on matched TCGA H&E slides, fused in as a fourth branch of the
+  attention network.
 - Wrap the model in a small Streamlit/Gradio demo and deploy to HuggingFace
   Spaces.
 - Write up as a short report/preprint once the fused model is in place.
