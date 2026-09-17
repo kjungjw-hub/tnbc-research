@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TNBC Project, Explained Simply</title>
+<style>
+  :root {
+    --bg: #fbf7ef;
+    --panel: #ffffff;
+    --border: #ecdfc4;
+    --text: #2b2418;
+    --text-dim: #6f6653;
+    --accent: #c8622f;
+    --accent-2: #3f8f6a;
+    --accent-3: #4f7fbf;
+    --soft: #fdeee0;
+    --shadow: 0 2px 4px rgba(43,36,24,0.06), 0 8px 20px rgba(43,36,24,0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #201b12;
+      --panel: #2b241a;
+      --border: #453a26;
+      --text: #f3ead9;
+      --text-dim: #bdaf94;
+      --accent: #e88a54;
+      --accent-2: #6fcf9e;
+      --accent-3: #86aee0;
+      --soft: #3a2a1c;
+      --shadow: 0 2px 4px rgba(0,0,0,0.3), 0 8px 20px rgba(0,0,0,0.3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #201b12;
+    --panel: #2b241a;
+    --border: #453a26;
+    --text: #f3ead9;
+    --text-dim: #bdaf94;
+    --accent: #e88a54;
+    --accent-2: #6fcf9e;
+    --accent-3: #86aee0;
+    --soft: #3a2a1c;
+    --shadow: 0 2px 4px rgba(0,0,0,0.3), 0 8px 20px rgba(0,0,0,0.3);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+  }
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 18px 70px;
+  }
+  h1 {
+    font-size: 1.8rem;
+    margin: 0 0 4px;
+  }
+  .lede {
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    max-width: 56ch;
+    margin-bottom: 34px;
+  }
+  .story {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .step {
+    display: flex;
+    gap: 16px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+    align-items: flex-start;
+  }
+  .emoji {
+    font-size: 2rem;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 46px;
+    text-align: center;
+  }
+  .step h2 {
+    margin: 0 0 6px;
+    font-size: 1.15rem;
+  }
+  .step p {
+    margin: 0;
+    color: var(--text-dim);
+    font-size: 0.98rem;
+  }
+  .step p + p { margin-top: 8px; }
+  .tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-left: 8px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+  .tag.done { color: var(--accent-2); background: color-mix(in srgb, var(--accent-2) 18%, transparent); }
+  .tag.soon { color: var(--accent-3); background: color-mix(in srgb, var(--accent-3) 18%, transparent); }
+
+  .intro-box {
+    background: var(--soft);
+    border-radius: 18px;
+    padding: 22px 24px;
+    margin-bottom: 30px;
+    font-size: 1.02rem;
+  }
+  .intro-box b { color: var(--accent); }
+
+  .arrow {
+    text-align: center;
+    color: var(--border);
+    font-size: 1.3rem;
+    margin: -6px 0;
+  }
+
+  footer {
+    max-width: 760px;
+    margin: 40px auto 0;
+    padding: 0 18px;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+  footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Finding better clues for a tricky kind of breast cancer 🔎</h1>
+  <div class="lede">
+    The same project as <a href="flow.html">the technical flow page</a>, but
+    explained the simple way — no jargon, just the idea.
+  </div>
+
+  <div class="intro-box">
+    Doctors check three little "tags" on a breast cancer tumor to help pick
+    medicine. <b>Triple-negative</b> means all three tags say "no" — so the
+    usual medicines don't have a target to aim at. That makes it harder to
+    treat, and it's why scientists want to find <b>new, better clues</b>
+    hidden inside the tumor's genes to help sort it into smaller groups that
+    each respond to different treatments.
+  </div>
+
+  <div class="story">
+
+    <div class="step">
+      <div class="emoji">📚</div>
+      <div>
+        <h2>1. Collect clues from real cases <span class="tag done">Done</span></h2>
+        <p>
+          Scientists around the world already studied hundreds of real
+          patients (kept anonymous) and shared the results for free, like a
+          big public library of clues — things like the tumor's size, and
+          which genes were turned "up" or "down" inside it.
+        </p>
+        <p>We gathered 320 of these TNBC cases to start with.</p>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="step">
+      <div class="emoji">🕵️</div>
+      <div>
+        <h2>2. Teach a computer detective to spot patterns <span class="tag done">Done</span></h2>
+        <p>
+          We built a computer program that looks at all those clues and
+          guesses which family group a tumor belongs to — kind of like
+          sorting Lego bricks by color, but the "color" is hidden in genes
+          instead of something you can see.
+        </p>
+        <p>
+          Our detective guesses right about <b>92 out of 100 times</b> — much
+          better than guessing from tumor size alone (about 61 out of 100).
+        </p>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="step">
+      <div class="emoji">🙋</div>
+      <div>
+        <h2>3. Make the detective show its work <span class="tag done">Done</span></h2>
+        <p>
+          We don't just trust a guess — we ask "why did you think that?" The
+          computer points to the exact genes it used to decide, and happily,
+          those are genes doctors already know matter for this cancer. That's
+          like checking your math homework and seeing the steps make sense.
+        </p>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="step">
+      <div class="emoji">🔬</div>
+      <div>
+        <h2>4. Give the detective eyes, too <span class="tag soon">Coming soon</span></h2>
+        <p>
+          Right now our detective only reads clue-lists (numbers). Next, we
+          want it to also look at real photos of tumor cells under a
+          microscope — using a ready-made "vision expert" AI that's already
+          learned to read medical photos — and combine what it sees with what
+          it reads.
+        </p>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="step">
+      <div class="emoji">🎮</div>
+      <div>
+        <h2>5. Build a toy anyone can try <span class="tag soon">Coming soon</span></h2>
+        <p>
+          A simple web page where you can plug in a sample's info and watch
+          the detective make its guess and explain itself live, instead of
+          only reading about it.
+        </p>
+      </div>
+    </div>
+
+    <div class="arrow">↓</div>
+
+    <div class="step">
+      <div class="emoji">📣</div>
+      <div>
+        <h2>6. Tell other scientists what we found <span class="tag soon">Coming soon</span></h2>
+        <p>
+          Write it all up so other researchers and doctors can check our
+          work, use it, or build on it — science is a team sport.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</main>
+<footer>
+  Plain-language companion to the <a href="flow.html">technical pipeline page</a>
+  for the <a href="https://github.com/kjungjw-hub/tnbc-research">tnbc-research</a>
+  project. Updated alongside it.
+</footer>
+</body>
+</html>

@@ -8,7 +8,7 @@ foundation-model imaging → explainability → interactive demo → writeup).
 
 **[View the pipeline flow diagram](flow.html)** — visual status of every
 phase, kept in sync with this repo (open locally, or via GitHub Pages once
-enabled).
+enabled). Prefer plain language? **[Explain-like-I'm-5 version](eli5.html)**.
 
 ## Status: Phase A + B (baseline) complete
 
