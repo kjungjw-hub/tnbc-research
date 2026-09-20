@@ -8,6 +8,9 @@ Label: CLAUDIN_SUBTYPE == "Basal" within the METABRIC TNBC cohort
 split within TNBC (non-basal TNBC skews toward the LAR/MSL-like,
 better-prognosis end of Lehmann's subtypes).
 """
+import os
+
+import joblib
 import numpy as np
 import pandas as pd
 import shap
@@ -91,6 +94,16 @@ if __name__ == "__main__":
     plt.tight_layout()
     plt.savefig("reports/shap_summary.png", dpi=150)
     print("\nSaved reports/shap_summary.png")
+
+    # Persist the fitted model + the exact feature layout it expects, so the
+    # demo app (app.py) can load a ready model instead of retraining.
+    os.makedirs("models", exist_ok=True)
+    joblib.dump(final_model, "models/fusion_model.joblib")
+    joblib.dump(list(fusion_X.columns), "models/fusion_features.joblib")
+    joblib.dump(list(clinical.columns), "models/clinical_features.joblib")
+    # Per-feature median, for the demo to pre-fill sliders with something typical.
+    joblib.dump(fusion_X.median(), "models/fusion_feature_medians.joblib")
+    print("Saved models/fusion_model.joblib (+ feature metadata)")
 
     with open("reports/baseline_results.md", "w") as f:
         f.write("# TNBC Basal vs Non-Basal: Baseline Results\n\n")

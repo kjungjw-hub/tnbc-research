@@ -253,7 +253,7 @@
     <span><span class="dot done"></span> Done</span>
     <span><span class="dot planned"></span> Planned</span>
   </div>
-  <div class="updated">Last updated: 2026-09-16 &middot; reflects commit 00f844c</div>
+  <div class="updated">Last updated: 2026-09-20 &middot; Phases A-E complete, F open</div>
 </header>
 
 <main>
@@ -346,33 +346,61 @@
     </div>
 
     <div class="stage">
-      <div class="rail"><div class="node planned"></div><div class="connector"></div></div>
+      <div class="rail"><div class="node"></div><div class="connector"></div></div>
       <div class="card">
         <div class="card-head">
           <h2>D &middot; Imaging branch (foundation model)</h2>
-          <span class="badge planned">Planned</span>
+          <span class="badge done">Done</span>
         </div>
         <p class="desc">
-          Extract frozen embeddings from an open pathology foundation model
-          (UNI or CONCH, HuggingFace) on H&amp;E tile crops from matched TCGA
-          slides, and fuse them in as a fourth branch of the attention network
-          alongside clinical / expression / CNA.
+          H&amp;E tissue tiles pulled directly from the GDC tile server (no
+          multi-GB .svs download) for 40 TCGA TNBC slides, embedded with
+          <b>Phikon</b> (Owkin) — an open, non-gated pathology foundation
+          model pretrained on TCGA histology. (UNI/CONCH from the original
+          plan are HuggingFace-gated and need manual license acceptance on an
+          account this environment doesn't have; Phikon is the public
+          equivalent, and fitting since our slides are TCGA slides too.)
         </p>
+        <div class="note">
+          Honest null result: with no subtype label for the imaging cohort,
+          we asked whether unsupervised image-embedding clusters line up with
+          basal-marker expression from matched RNA-seq. They don't, at this
+          sample size (n=39, Mann-Whitney p=0.72, PC1 correlation r=-0.12,
+          p=0.45) — reported as-is rather than reframed to look positive.
+        </div>
+        <div class="files">
+          <a href="src/fetch_imaging.py"><code class="file">src/fetch_imaging.py</code></a>
+          <a href="src/imaging_analysis.py"><code class="file">src/imaging_analysis.py</code></a>
+          <a href="data/tcga_imaging_embeddings.csv"><code class="file">data/tcga_imaging_embeddings.csv</code></a>
+          <a href="reports/imaging_analysis.png"><code class="file">reports/imaging_analysis.png</code></a>
+          <a href="data/tiles"><code class="file">data/tiles/</code></a>
+        </div>
       </div>
     </div>
 
     <div class="stage">
-      <div class="rail"><div class="node planned"></div><div class="connector"></div></div>
+      <div class="rail"><div class="node"></div><div class="connector"></div></div>
       <div class="card">
         <div class="card-head">
           <h2>E &middot; Interactive demo</h2>
-          <span class="badge planned">Planned</span>
+          <span class="badge done">Done</span>
         </div>
         <p class="desc">
-          Streamlit or Gradio app: pick a sample, see predicted subtype/risk
-          score plus its SHAP / attention explanation. Deployed free on
-          HuggingFace Spaces and linked from the resume / portfolio site.
+          Streamlit app (<code>app.py</code>): pick a real (anonymized)
+          METABRIC patient, see the fusion model's predicted probability of
+          basal-like subtype next to the known ground-truth call, plus a live
+          local SHAP explanation. A "what if" panel lets you drag the model's
+          top genes and watch the prediction update in real time. Verified
+          working end-to-end locally.
         </p>
+        <div class="note">
+          Not yet deployed to HuggingFace Spaces — needs an HF account/token
+          this environment doesn't have. Runs identically once deployed there.
+        </div>
+        <div class="files">
+          <a href="app.py"><code class="file">app.py</code></a>
+          <a href="models/fusion_model.joblib"><code class="file">models/fusion_model.joblib</code></a>
+        </div>
       </div>
     </div>
 

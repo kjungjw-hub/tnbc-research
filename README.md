@@ -10,7 +10,7 @@ foundation-model imaging → explainability → interactive demo → writeup).
 phase, kept in sync with this repo (open locally, or via GitHub Pages once
 enabled). Prefer plain language? **[Explain-like-I'm-5 version](eli5.html)**.
 
-## Status: Phase A + B (baseline) complete
+## Status: Phase A-E complete (F, the writeup, still open)
 
 **Data (Phase A)** — pulled from the public [cBioPortal](https://www.cbioportal.org)
 REST API, no auth required:
@@ -75,13 +75,51 @@ Run with:
 python3 src/attention_fusion.py
 ```
 
+**Imaging branch (Phase D)** — `src/fetch_imaging.py` pulls H&E tissue tiles
+straight from the GDC tile server (no multi-GB `.svs` download: it fetches
+individual DeepZoom-style tiles, scores each for tissue content, and keeps
+the top 3 per slide) for the 40 TCGA TNBC slides with a diagnostic image
+available, then embeds them with **Phikon** (Owkin) — an open, non-gated
+pathology foundation model pretrained on TCGA histology via self-supervised
+learning (`mahmoodlab/UNI` and `CONCH` from the original plan are
+HuggingFace-gated and need manual license acceptance on an account this
+environment doesn't have; Phikon is the public equivalent, and a fitting one
+since our slides are TCGA slides too).
+
+`src/imaging_analysis.py` then asks an honest question: with no subtype
+label for the imaging cohort, does an unsupervised cluster of the image
+embeddings alone line up with basal-marker gene expression from the matched
+RNA-seq (computed independently)? Result (`reports/imaging_analysis.png`,
+`reports/imaging_analysis.md`): **no**, not at this sample size (n=39,
+Mann-Whitney p=0.72, PC1 correlation r=-0.12, p=0.45). Reported as a null
+result rather than reframed to look positive — a real limitation of a
+39-sample exploratory check, not evidence the idea is wrong.
+
+Run with:
+```
+python3 src/fetch_imaging.py
+python3 src/imaging_analysis.py
+```
+
+**Interactive demo (Phase E)** — `app.py` is a Streamlit app: pick a real
+(anonymized) METABRIC patient and see the fusion model's predicted
+probability of basal-like subtype next to the known ground-truth call, plus
+a live local SHAP explanation. A "what if" panel lets you drag the model's
+top genes and watch the prediction update in real time. Verified working
+end-to-end locally (sample switching, live SHAP, live slider re-prediction).
+
+Run with:
+```
+python3 src/baseline_model.py   # writes models/fusion_model.joblib first
+streamlit run app.py
+```
+
+Not yet deployed to HuggingFace Spaces — that needs an HF account/token this
+environment doesn't have; the app runs identically once deployed there.
+
 ## Next
-- Add the imaging branch: frozen UNI/CONCH pathology foundation-model
-  embeddings on matched TCGA H&E slides, fused in as a fourth branch of the
-  attention network.
-- Wrap the model in a small Streamlit/Gradio demo and deploy to HuggingFace
-  Spaces.
-- Write up as a short report/preprint once the fused model is in place.
+- Phase F: write up as a short report/preprint.
+- Deploy `app.py` to HuggingFace Spaces once there's an HF token to push with.
 
 ## Setup
 ```
